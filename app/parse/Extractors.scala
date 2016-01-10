@@ -4,7 +4,7 @@ import scala.xml.NodeSeq
 import model.{Tree, Feature, Rect, Size, Stage}
 
 
-case class SizeFragment(cascadeDefault: NodeSeq) extends Extractor[Size] {
+private[parse] case class SizeFragment(cascadeDefault: NodeSeq) extends Extractor[Size] {
 
   val size = cascadeDefault \\ "size"
   val sizeArray: Array[Int] = size.text.split(" ").map(_.toInt)
@@ -14,13 +14,13 @@ case class SizeFragment(cascadeDefault: NodeSeq) extends Extractor[Size] {
   }
 }
 
-case class RectFragment(parentFragment: NodeSeq) extends Extractor[Seq[Rect]] {
+private[parse] case class RectFragment(parentFragment: NodeSeq) extends Extractor[Seq[Rect]] {
   val rects = parentFragment \ "_"
 
   override def extract(): Seq[Rect] = rects.map(_.text.split(" ").map(_.toDouble)).map { case Array(x1, x2, y1, y2, w) => Rect(x1, x2, y1, y2, w) }
 }
 
-case class FeatureFragment(parentFragment: NodeSeq) extends Extractor[Feature] {
+private[parse] case class FeatureFragment(parentFragment: NodeSeq) extends Extractor[Feature] {
 
   val feature = parentFragment \\ "feature"
 
@@ -32,7 +32,7 @@ case class FeatureFragment(parentFragment: NodeSeq) extends Extractor[Feature] {
   }
 }
 
-case class TreeFragment(parentFragment: NodeSeq) extends Extractor[Tree] {
+private[parse] case class TreeFragment(parentFragment: NodeSeq) extends Extractor[Tree] {
 
   val feature = FeatureFragment(parentFragment).extract()
   val extractDouble = (name:String) => (parentFragment \\ name).text.toDouble
@@ -43,13 +43,13 @@ case class TreeFragment(parentFragment: NodeSeq) extends Extractor[Tree] {
   override def extract(): Tree = Tree(feature, threshold, left, right)
 }
 
-case class TreeListFragment(parentFragment: NodeSeq) extends Extractor[Seq[Tree]] {
+private[parse] case class TreeListFragment(parentFragment: NodeSeq) extends Extractor[Seq[Tree]] {
   val trees = parentFragment \ "_"
 
   override def extract(): Seq[Tree] = trees.map(TreeFragment(_).extract())
 }
 
-case class StageFragment(parentFragment: NodeSeq) extends Extractor[Stage] {
+private[parse] case class StageFragment(parentFragment: NodeSeq) extends Extractor[Stage] {
   val trees = TreeListFragment(parentFragment \ "trees").extract()
   val threshold = (parentFragment \\ "stage_threshold").text.toDouble
   val parent = parentFragment \\ "parent"
@@ -58,7 +58,7 @@ case class StageFragment(parentFragment: NodeSeq) extends Extractor[Stage] {
   override def extract(): Stage = Stage(trees, threshold)
 }
 
-case class StageListFragment(parentFragment: NodeSeq) extends Extractor[Seq[Stage]] {
+private[parse] case class StageListFragment(parentFragment: NodeSeq) extends Extractor[Seq[Stage]] {
   val stages = parentFragment \ "_"
 
   override def extract(): Seq[Stage] = stages.map(StageFragment(_).extract())
