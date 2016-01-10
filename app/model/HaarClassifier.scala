@@ -11,7 +11,7 @@ case class Stage(trees: Array[Tree], stageThreshold: Double)
 
 case class Tree(feature: Feature, threshold: Double, leftValue: Double, rightValue: Double)
 
-case class Feature(featureRectangles: Array[Rect])
+case class Feature(featureRectangles: Seq[Rect], tilted: Boolean)
 
 case class Rect(x1: Double, x2: Double, y1: Double, y2: Double, weight: Double)
 
