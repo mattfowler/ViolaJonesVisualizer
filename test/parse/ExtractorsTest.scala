@@ -173,8 +173,65 @@ class ExtractorsTest extends FlatSpec with Matchers {
     val expectedTree2 = Tree(expectedFeature2, 0.0123960003256798, -1.8633940219879150, 1.3272049427032471)
 
     val extracted: Stage = StageFragment(xml).extract()
-    extracted.trees should be (Seq(expectedTree1, expectedTree2))
-    extracted.stageThreshold should be (1.123)
+    extracted.trees should be(Seq(expectedTree1, expectedTree2))
+    extracted.stageThreshold should be(1.123)
+  }
+
+  it should "be able to parse multiple stages" in {
+    val xml =
+      <stages>
+        <_>
+          <trees>
+            <_>
+              <!-- tree 0 -->
+              <_>
+                <!-- root node -->
+                <feature>
+                  <rects>
+                    <_>3 9 18 9 -1.</_>
+                    <_>3 12 18 3 3.</_>
+                  </rects>
+                  <tilted>0</tilted>
+                </feature>
+                <threshold>-0.0315119996666908</threshold>
+                <left_val>2.0875380039215088</left_val>
+                <right_val>-2.2172100543975830</right_val>
+              </_>
+            </_>
+          </trees>
+          <stage_threshold>1.1</stage_threshold>
+        </_>
+        <_>
+          <trees>
+            <_>
+              <!-- tree 0 -->
+              <_>
+                <!-- root node -->
+                <feature>
+                  <rects>
+                    <_>3 9 18 9 -1.</_>
+                    <_>3 12 18 3 3.</_>
+                  </rects>
+                  <tilted>0</tilted>
+                </feature>
+                <threshold>-0.0315119996666908</threshold>
+                <left_val>2.0875380039215088</left_val>
+                <right_val>-2.2172100543975830</right_val>
+              </_>
+            </_>
+          </trees>
+          <stage_threshold>3.1</stage_threshold>
+        </_>
+      </stages>
+
+    val expectedFeature1 = Feature(Seq(Rect(3.0, 9.0, 18.0, 9.0, -1.0), Rect(3.0, 12.0, 18.0, 3.0, 3.0)), false)
+    val expectedTree1 = Tree(expectedFeature1, -0.0315119996666908, 2.0875380039215088, -2.2172100543975830)
+    val expectedStage1 = Stage(Seq(expectedTree1), 1.1)
+    val expectedStage2 = Stage(Seq(expectedTree1), 3.1)
+
+
+    val extracted = StageListFragment(xml).extract()
+    extracted should be(Seq(expectedStage1, expectedStage2))
   }
 
 }
