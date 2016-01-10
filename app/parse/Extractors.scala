@@ -35,9 +35,10 @@ case class FeatureFragment(parentFragment: NodeSeq) extends Extractor[Feature] {
 case class TreeFragment(parentFragment: NodeSeq) extends Extractor[Tree] {
 
   val feature = FeatureFragment(parentFragment).extract()
-  val threshold = (parentFragment \\ "threshold").text.toDouble
-  val left = (parentFragment \\ "left_val").text.toDouble
-  val right = (parentFragment \\ "right_val").text.toDouble
+  val extractDouble = (name:String) => (parentFragment \\ name).text.toDouble
+  val threshold = extractDouble("threshold")
+  val left = extractDouble("left_val")
+  val right = extractDouble("right_val")
 
   override def extract(): Tree = Tree(feature, threshold, left, right)
 }
