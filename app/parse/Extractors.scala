@@ -1,7 +1,7 @@
 package parse
 
 import scala.xml.NodeSeq
-import model.{Tree, Feature, Rect, Size, Stage}
+import model._
 
 
 private[parse] case class SizeFragment(cascadeDefault: NodeSeq) extends Extractor[Size] {
@@ -62,4 +62,10 @@ private[parse] case class StageListFragment(parentFragment: NodeSeq) extends Ext
   val stages = parentFragment \ "_"
 
   override def extract(): Seq[Stage] = stages.map(StageFragment(_).extract())
+}
+
+private[parse] case class HarrClassifierFragment(parentFragment: NodeSeq) extends Extractor[HaarClassifier] {
+  val stages = StageListFragment(parentFragment \ "stages").extract()
+  val size = SizeFragment(parentFragment).extract()
+  override def extract(): HaarClassifier = HaarClassifier(stages, size)
 }

@@ -5,7 +5,7 @@ case class Size(width: Int, size: Int) {
   require(width > 0 && size > 0)
 }
 
-case class HaarClassifier(stages: Array[Stage], size: Size)
+case class HaarClassifier(stages: Seq[Stage], size: Size)
 
 case class Stage(trees: Seq[Tree], stageThreshold: Double)
 
