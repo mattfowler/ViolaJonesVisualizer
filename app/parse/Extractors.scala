@@ -42,3 +42,9 @@ case class TreeFragment(parentFragment: NodeSeq) extends Extractor[Tree] {
 
   override def extract(): Tree = Tree(feature, threshold, left, right)
 }
+
+case class TreeListFragment(parentFragment: NodeSeq) extends Extractor[Seq[Tree]] {
+  val trees = parentFragment \ "_"
+
+  override def extract(): Seq[Tree] = trees.map(TreeFragment(_).extract())
+}
