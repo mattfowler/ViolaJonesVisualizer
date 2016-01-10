@@ -7,7 +7,7 @@ case class Size(width: Int, size: Int) {
 
 case class HaarClassifier(stages: Array[Stage], size: Size)
 
-case class Stage(trees: Array[Tree], stageThreshold: Double)
+case class Stage(trees: Seq[Tree], stageThreshold: Double)
 
 case class Tree(feature: Feature, threshold: Double, leftValue: Double, rightValue: Double)
 
