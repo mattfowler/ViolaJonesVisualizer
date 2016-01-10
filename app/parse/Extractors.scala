@@ -1,7 +1,7 @@
 package parse
 
 import scala.xml.NodeSeq
-import model.{Feature, Rect, Size}
+import model.{Tree, Feature, Rect, Size}
 
 
 case class SizeFragment(cascadeDefault: NodeSeq) extends Extractor[Size] {
@@ -30,4 +30,14 @@ case class FeatureFragment(parentFragment: NodeSeq) extends Extractor[Feature] {
 
     Feature(rects.extract(), tilted)
   }
+}
+
+case class TreeFragment(parentFragment: NodeSeq) extends Extractor[Tree] {
+
+  val feature = FeatureFragment(parentFragment).extract()
+  val threshold = (parentFragment \\ "threshold").text.toDouble
+  val left = (parentFragment \\ "left_val").text.toDouble
+  val right = (parentFragment \\ "right_val").text.toDouble
+
+  override def extract(): Tree = Tree(feature, threshold, left, right)
 }

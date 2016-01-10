@@ -1,6 +1,6 @@
 package parse
 
-import model.{Feature, Rect, Size}
+import model.{Tree, Feature, Rect, Size}
 
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -53,6 +53,27 @@ class ExtractorsTest extends FlatSpec with Matchers {
       </_>
 
     FeatureFragment(xml).extract() should be(Feature(Seq(Rect(3.0, 9.0, 18.0, 9.0, -1.0), Rect(3.0, 12.0, 18.0, 3.0, 3.0)), false))
+  }
+
+  behavior of "Tree parsing"
+
+  it should "be able to extract a tree with a feature and threshold" in {
+    val xml =
+      <_>
+        <feature>
+          <rects>
+            <_>3 9 18 9 -1.</_>
+            <_>3 12 18 3 3.</_>
+          </rects>
+          <tilted>0</tilted>
+        </feature>
+        <threshold>0.0102530000731349</threshold>
+        <left_val>-0.6085060238838196</left_val>
+        <right_val>0.7709850072860718</right_val>
+      </_>
+
+    val expectedFeature = Feature(Seq(Rect(3.0, 9.0, 18.0, 9.0, -1.0), Rect(3.0, 12.0, 18.0, 3.0, 3.0)), false)
+    TreeFragment(xml).extract() should be(Tree(expectedFeature, 0.0102530000731349, -0.6085060238838196, 0.7709850072860718))
   }
 
 }
