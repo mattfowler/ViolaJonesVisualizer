@@ -64,7 +64,7 @@ private[parse] case class StageListFragment(parentFragment: NodeSeq) extends Ext
   override def extract(): Seq[Stage] = stages.map(StageFragment(_).extract())
 }
 
-private[parse] case class HarrClassifierFragment(parentFragment: NodeSeq) extends Extractor[HaarClassifier] {
+private[parse] case class HaarClassifierFragment(parentFragment: NodeSeq) extends Extractor[HaarClassifier] {
   val stages = StageListFragment(parentFragment \ "stages").extract()
   val size = SizeFragment(parentFragment).extract()
   override def extract(): HaarClassifier = HaarClassifier(stages, size)

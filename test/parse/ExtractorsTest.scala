@@ -290,7 +290,7 @@ class ExtractorsTest extends FlatSpec with Matchers {
     val expectedStage1 = Stage(Seq(expectedTree1), 1.1)
     val expectedStage2 = Stage(Seq(expectedTree1), 3.1)
 
-    val extracted = HarrClassifierFragment(xml).extract()
+    val extracted = HaarClassifierFragment(xml).extract()
     extracted should be(HaarClassifier(Seq(expectedStage1, expectedStage2), Size(24, 24)))
   }
 
